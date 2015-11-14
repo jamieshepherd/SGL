@@ -162,10 +162,15 @@ int main()
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 
+		// Depth test
+		glEnable(GL_DEPTH_TEST);
+
 		// Render
 		// Clear the colorbuffer
+		http://i.imgur.com/olJCjzr.gifv
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 		ourShader.Use();

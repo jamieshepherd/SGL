@@ -1,8 +1,9 @@
-﻿Build started 14/11/2015 01:40:38.
+﻿Build started 14/11/2015 13:53:24.
      1>Project "D:\Projects\SGL\SGL\SGL.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ID:\Projects\SGL\packages\glew.v140.1.12.0\build\native\../..//build/native/include/ /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D GLEW_STATIC /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Main.cpp
          Main.cpp
+     1>d:\projects\sgl\sgl\main.cpp(170): warning C4102: 'http': unreferenced label
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Projects\SGL\Debug\SGL.exe" /INCREMENTAL /NOLOGO D:\Projects\SGL\packages\glew.v140.1.12.0\build\native\../..//build/native/lib/Win32\Debug\glew32sd.lib opengl32.lib glfw3.lib soil.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\Projects\SGL\Debug\SGL.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Projects\SGL\Debug\SGL.lib" /MACHINE:X86 Debug\Main.obj
          Debug\Shader.obj
@@ -13,4 +14,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.51
+Time Elapsed 00:00:01.84
