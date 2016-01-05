@@ -24,18 +24,33 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="FS_Shader.glsl">
+    <None Include="Shaders\VS_Shader.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="VS_Shader.glsl">
+    <None Include="Shaders\FS_Lamp.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\FS_Shader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_Lamp.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

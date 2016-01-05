@@ -7,18 +7,15 @@
 
 #include <GL/glew.h>
 
-namespace SGL
+class Shader
 {
-	class Shader
-	{
-	public:
-		// The program ID
-		GLuint Program;
+public:
+	// The program ID
+	GLuint Program;
 
-		// Constructor reads and builds the shader
-		Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
+	// Constructor reads and builds the shader
+	Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
 
-		// Use the program
-		void Use();
-	};
-}
+	// Use the program
+	void Use();
+};
