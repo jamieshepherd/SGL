@@ -3,6 +3,8 @@
 // Standard
 #include <iostream>
 #include <windows.h>
+#include <string>
+#include <vector>
 
 // GLEW
 #include <GL/glew.h>

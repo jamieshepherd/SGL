@@ -1,4 +1,6 @@
-﻿  Main.cpp
-z:\projects\sgl\sgl\main.cpp(184): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-z:\projects\sgl\sgl\main.cpp(185): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+﻿  Model.cpp
+  Main.cpp
+z:\projects\sgl\sgl\main.cpp(118): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+z:\projects\sgl\sgl\main.cpp(119): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
   SGL.vcxproj -> Z:\Projects\SGL\Debug\SGL.exe

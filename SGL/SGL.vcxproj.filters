@@ -9,10 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{cac86750-4724-4392-a833-90de90bac328}</UniqueIdentifier>
     </Filter>
@@ -27,19 +23,37 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Shaders\VS_Shader.glsl">
+    <None Include="Shaders\VS_Lamp.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_Lighting.glsl">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\FS_Lamp.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\FS_Shader.glsl">
+    <None Include="Shaders\FS_Lighting.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\VS_Lamp.glsl">
+    <None Include="Shaders\FS_Model.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_Model.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
@@ -51,6 +65,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
