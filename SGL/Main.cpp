@@ -19,7 +19,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void input_process();
 
 // Window dimensions
-const GLuint WIDTH = 800, HEIGHT = 600;
+const GLuint WIDTH = 1024, HEIGHT = 768;
 
 // Camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -53,6 +53,8 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5); // OpenGL minor version 5 (OpenGL 4.5)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // The window should not be resizable
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	glEnable(GL_MULTISAMPLE);
 	// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // If we're on Mac OS X we need this too
 
 	// Create a new window object
@@ -92,8 +94,9 @@ int main()
 	//Shader lampShader("Shaders/VS_Lamp.glsl", "Shaders/FS_Lamp.glsl");
 
 	Shader modelShader("Shaders/VS_Model.glsl", "Shaders/FS_Model.glsl");
-	Model ourModel("Models/nanosuit/nanosuit.obj");
-	Skybox skybox();
+	Shader skyboxShader("Shaders/VS_Skybox.glsl", "Shaders/FS_Skybox.glsl");
+	Model  ourModel("Models/nanosuit/nanosuit.obj");
+	Skybox skybox(nullptr);
 
 	// Draw in wireframe
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -115,21 +118,23 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// View
+		glm::mat4 view;
+		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+
+		// Projection 
+		glm::mat4 projection;
+		projection = glm::perspective(glm::radians(camera.Fov), (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
+
 		// Draw skybox first
 		glDepthMask(GL_FALSE);// Remember to turn depth writing off
 		skyboxShader.Use();
-		glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));	// Remove any translation component of the view matrix
-		glm::mat4 projection = glm::perspective(camera.Zoom, (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+
+		glUniform1i(glGetUniformLocation(modelShader.Program, "skybox"), 0);
 		glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-		// skybox cube
-		glBindVertexArray(skyboxVAO);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform1i(glGetUniformLocation(shader.Program, "skybox"), 0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-		glDepthMask(GL_TRUE);
+
+		skybox.Draw();
 
 		// Change light position values over time
 		lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
@@ -138,22 +143,16 @@ int main()
 		// Lighting stuff
 		modelShader.Use();
 
-		// View
-		glm::mat4 view;
-		view = camera.GetViewMatrix();
-
-		// Projection 
-		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(camera.Fov), (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
-
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-
 		// Draw the loaded model
 		glm::mat4 model;
+		view = camera.GetViewMatrix();
+
 		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // Translate it down a bit so it's at the center of the scene
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// It's a bit too big for our scene, so scale it down
 		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
 		ourModel.Draw(modelShader);
 
 		// Swap the screen buffers
@@ -228,7 +227,7 @@ void input_process()
 {
 	// Camera controls
 	GLfloat cameraSpeed = 5.0f * deltaTime;
-	std::cout << deltaTime << std::endl;
+	//std::cout << deltaTime << std::endl; // GET FPS
 
 	if (keys[GLFW_KEY_W])
 		camera.ProcessKeyboard(FORWARD, deltaTime);

@@ -133,6 +133,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -140,9 +141,11 @@
     <None Include="Shaders\FS_Lamp.glsl" />
     <None Include="Shaders\FS_Lighting.glsl" />
     <None Include="Shaders\FS_Model.glsl" />
+    <None Include="Shaders\FS_Skybox.glsl" />
     <None Include="Shaders\VS_Lamp.glsl" />
     <None Include="Shaders\VS_Lighting.glsl" />
     <None Include="Shaders\VS_Model.glsl" />
+    <None Include="Shaders\VS_Skybox.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -151,6 +154,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Skybox.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

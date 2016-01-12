@@ -1,6 +1,0 @@
-﻿  Shader.cpp
-  Main.cpp
-z:\projects\sgl\sgl\common.h(14): fatal error C1083: Cannot open include file: 'SOIL/soil.h': No such file or directory
-  Camera.cpp
-z:\projects\sgl\sgl\common.h(14): fatal error C1083: Cannot open include file: 'SOIL/soil.h': No such file or directory
-  Generating Code...

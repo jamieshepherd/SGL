@@ -8,8 +8,12 @@ class Skybox
 {
 public:
 	GLuint TextureID;
-	Skybox();
-	Shader Shader();
+	GLuint skyboxVAO, skyboxVBO;
+	GLuint cubemapTexture;
+	Shader *shader;
+
+	Skybox(char* a);
+	void Draw();
 private:
 	GLfloat CubeVertices[];
 	GLuint Load(std::vector<const GLchar*> faces);

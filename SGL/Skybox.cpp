@@ -8,10 +8,8 @@ A class that loads and generates the Skybox as a cubemap.
 
 #include "Skybox.h"
 
-Skybox::Skybox()
+Skybox::Skybox(char* a)
 {
-	Shader SkyboxShader("Shaders/VS_Skybox.glsl", "Shaders/FS_Skybox.glsl");
-
 	// Make a box
 	GLfloat cubeVertices[] = {
 		// Positions          // Texture Coords
@@ -103,8 +101,6 @@ Skybox::Skybox()
 		1.0f, -1.0f,  1.0f
 	};
 
-	// Setup skybox VAO
-	GLuint skyboxVAO, skyboxVBO;
 	glGenVertexArrays(1, &skyboxVAO);
 	glGenBuffers(1, &skyboxVBO);
 	glBindVertexArray(skyboxVAO);
@@ -121,7 +117,7 @@ Skybox::Skybox()
 	faces.push_back("skybox/bottom.jpg");
 	faces.push_back("skybox/back.jpg");
 	faces.push_back("skybox/front.jpg");
-	GLuint cubemapTexture = Load(faces);
+	cubemapTexture = Load(faces);
 }
 
 
@@ -156,4 +152,15 @@ GLuint Skybox::Load(std::vector<const GLchar*> faces)
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	return textureID;
+}
+
+void Skybox::Draw()
+{
+	// Skybox cube
+	glBindVertexArray(skyboxVAO);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+	glDepthMask(GL_TRUE);
 }
