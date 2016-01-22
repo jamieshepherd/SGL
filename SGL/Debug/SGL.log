@@ -1,6 +1,9 @@
 ﻿  Main.cpp
 z:\projects\sgl\sgl\skybox.h(18): warning C4200: nonstandard extension used: zero-sized array in struct/union
   z:\projects\sgl\sgl\skybox.h(18): note: Cannot generate copy-ctor or copy-assignment operator when UDT contains a zero-sized array
-z:\projects\sgl\sgl\main.cpp(140): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-z:\projects\sgl\sgl\main.cpp(141): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+z:\projects\sgl\sgl\main.cpp(36): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+z:\projects\sgl\sgl\main.cpp(37): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+z:\projects\sgl\sgl\main.cpp(176): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+glew32sd.lib(glew.obj) : warning LNK4099: PDB 'glew_static.pdb' was not found with 'glew32sd.lib(glew.obj)' or at 'Z:\Projects\SGL\Debug\glew_static.pdb'; linking object as if no debug info
   SGL.vcxproj -> Z:\Projects\SGL\Debug\SGL.exe

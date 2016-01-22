@@ -1,0 +1,23 @@
+configurations {
+    Toolset { 
+        key : "PlatformToolset";
+        choices : { v120 };
+    };
+    Platform { 
+        key : "Platform";
+        choices : { Win32, ARM };
+        Win32.aliases : { x86, win32, ia32, 386 };
+        ARM.aliases : { arm, woa };
+    };
+    Configuration { 
+        key : "Configuration";
+        choices : { Release, Debug };
+    };
+    TargetApplicationType { 
+        key : "TargetApplicationType";
+        choices : { Desktop, WinRT, Phone8 };
+        Desktop.aliases : { desktop, notwinrt };
+        WinRT.aliases : { winrt, metro, modern };
+        Phone8.aliases : { phone8, phone, windowsphone };
+    };
+};

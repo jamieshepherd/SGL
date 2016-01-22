@@ -3,7 +3,8 @@
 Model.cpp
 --------------------------------------------------------------------
 An abstract model class that takes in a file and texture and loads
-it into memory in open asset import library's format.
+it into memory in open asset import library's format. This is based
+on a 3rd party class that is used to help us get it into OpenGL.
 --------------------------------------------------------------------
 */
 

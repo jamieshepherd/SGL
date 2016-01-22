@@ -17,21 +17,24 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void input_process();
+GLuint loadTexture(GLchar* path);
+void RenderScene(Shader &shader, Model &model);
+void DrawCube();
 
-// Window dimensions
-const GLuint WIDTH = 1024, HEIGHT = 768;
+// Window dimensions - We set this to 1024x768 by default but we get the full window size later
+GLuint gWIDTH = 1024, gHEIGHT = 768;
 
-// Camera
+// Camera - Set our basic camera viewpoint
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-// Light attributes
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+// The starting position for our scene light
+glm::vec3 sceneLight(-2.0f, 4.0f, -1.0f);
 
 // Mouse
 GLfloat yaw = -90.0f; // Due to Eular angles
 GLfloat pitch = 0.0f;
-GLfloat lastX = WIDTH / 2.0;
-GLfloat lastY = HEIGHT / 2.0;
+GLfloat lastX = (GLfloat)gWIDTH / 2.0;
+GLfloat lastY = (GLfloat)gHEIGHT / 2.0;
 GLfloat fov   = 45.0f;
 
 // Input
@@ -41,24 +44,33 @@ bool keys[1024]; // 1024 key array whether a key is pressed
 GLfloat deltaTime = 0.0f; // Time between current and last frame
 GLfloat lastFrame = 0.0f; // Time of last frame
 
+GLboolean shadows = true;
+
+// GLuint references
+GLuint cubeTexture, grassTexture, planeVAO;
+
 int main()
 {
 #ifndef _DEBUG // Hide our console window if we're in release mode
 	FreeConsole(); 
 #endif
-	std::cout << "Starting GLFW context, OpenGL 4.5" << std::endl;
+	std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
 
 	glfwInit(); // In the main function we first initialize GLFW with glfwInit
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); // OpenGL major version 4 (OpenGL 4.5)
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5); // OpenGL minor version 5 (OpenGL 4.5)
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // OpenGL major version 4 (OpenGL 4.5)
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); // OpenGL minor version 5 (OpenGL 4.5)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // The window should not be resizable
-	glfwWindowHint(GLFW_SAMPLES, 4);
-	glEnable(GL_MULTISAMPLE);
-	// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // If we're on Mac OS X we need this too
+	glfwWindowHint(GLFW_SAMPLES, 4); // Set samples to 4
+	glEnable(GL_MULTISAMPLE); // Enable multisampling
+	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // If we're on Mac OS X we need this too
+
+	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	gWIDTH = 1024;
+	gHEIGHT = 768;
 
 	// Create a new window object
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "ShepherdGL", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(gWIDTH, gHEIGHT, "ShepherdGL", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -85,77 +97,147 @@ int main()
 	}
 
 	// Create the viewport
-	glViewport(0, 0, WIDTH, HEIGHT);
+	glViewport(0, 0, gWIDTH, gHEIGHT);
 
-	// Depth test
+	// Enable depth testing
 	glEnable(GL_DEPTH_TEST);
 
-	//Shader lightingShader("Shaders/VS_Lighting.glsl", "Shaders/FS_Lighting.glsl");
-	//Shader lampShader("Shaders/VS_Lamp.glsl", "Shaders/FS_Lamp.glsl");
-
-	Shader modelShader("Shaders/VS_Model.glsl", "Shaders/FS_Model.glsl");
+	/* Shaders */
 	Shader skyboxShader("Shaders/VS_Skybox.glsl", "Shaders/FS_Skybox.glsl");
-	Model  ourModel("Models/nanosuit/nanosuit.obj");
+	Shader shader("Shaders/VS_Shadow.glsl", "Shaders/FS_Shadow.glsl");
+	Shader simpleDepthShader("Shaders/VS_Depth.glsl", "Shaders/FS_Depth.glsl");
+
+	// Load main model
+	Model ourModel("Models/farmhouse/Farmhouse OBJ.obj");
+
+	// Make a new Skybox
 	Skybox skybox(nullptr);
 
-	// Draw in wireframe
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	shader.Use();
+	glUniform1i(glGetUniformLocation(shader.Program, "diffuseTexture"), 0);
+	glUniform1i(glGetUniformLocation(shader.Program, "shadowMap"), 1);
 
-	// The game loop
+	// Make our floor
+	GLfloat planeVertices[] = {
+		25.0f, -0.5f, 25.0f, 0.0f, 1.0f, 0.0f, 25.0f, 0.0f,
+		-25.0f, -0.5f, -25.0f, 0.0f, 1.0f, 0.0f, 0.0f, 25.0f,
+		-25.0f, -0.5f, 25.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		25.0f, -0.5f, 25.0f, 0.0f, 1.0f, 0.0f, 25.0f, 0.0f,
+		25.0f, -0.5f, -25.0f, 0.0f, 1.0f, 0.0f, 25.0f, 25.0f,
+		-25.0f, -0.5f, -25.0f, 0.0f, 1.0f, 0.0f, 0.0f, 25.0f
+	};
+	// Setup plane VAO
+	GLuint planeVBO;
+	glGenVertexArrays(1, &planeVAO);
+	glGenBuffers(1, &planeVBO);
+	glBindVertexArray(planeVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+	glBindVertexArray(0);
+
+	cubeTexture = loadTexture("Textures/rock.png");
+	grassTexture = loadTexture("Textures/grass.jpg");
+
+	// Depth map FBO
+	const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+	GLuint depthMapFBO;
+	glGenFramebuffers(1, &depthMapFBO);
+	// Depth texture
+	GLuint depthMap;
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+	// The main game loop
 	while (!glfwWindowShouldClose(window)) // For as long as window should NOT close
 	{
-		// Calculate deltatime of current frame
-		GLfloat currentFrame = (float)glfwGetTime();
+		// Set frame time
+		GLfloat currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
+		// Check and call events
 		glfwPollEvents();
 		input_process();
 
-		// Render
-		// Clear the colorbuffer
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		// Light position
+		sceneLight.x = (float)sin(glfwGetTime()) * 1.5f;
+		sceneLight.z = (float)cos(glfwGetTime()) * 1.0f;
+		sceneLight.y = (float)2.0 + (float)cos(glfwGetTime()) * 0.5f;
+
+		// Render depth of scene to texture
+		glm::mat4 lightProjection, lightView;
+		glm::mat4 lightSpaceMatrix;
+		GLfloat near_plane = 1.0f, far_plane = 7.5f;
+		lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+		lightView = glm::lookAt(sceneLight, glm::vec3(0.0f), glm::vec3(1.0));
+		lightSpaceMatrix = lightProjection * lightView;
+		simpleDepthShader.Use();
+		glUniformMatrix4fv(glGetUniformLocation(simpleDepthShader.Program, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		RenderScene(simpleDepthShader, ourModel);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		// Render rest of scene
+		glViewport(0, 0, gWIDTH, gHEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// View
-		glm::mat4 view;
-		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
-
-		// Projection 
-		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(camera.Fov), (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
-
-		// Draw skybox first
-		glDepthMask(GL_FALSE);// Remember to turn depth writing off
+		// Render the Skybox
+		glDepthMask(GL_FALSE);
 		skyboxShader.Use();
 
-		glUniform1i(glGetUniformLocation(modelShader.Program, "skybox"), 0);
+		glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Fov), (GLfloat)gWIDTH / (GLfloat)gHEIGHT, 0.1f, 100.0f);		
+
+		glUniform1i(glGetUniformLocation(skyboxShader.Program, "skybox"), 0);
 		glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 		skybox.Draw();
 
-		// Change light position values over time
-		lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
-		lightPos.y = sin(glfwGetTime() / 2.0f) * 1.0f;
+		// Render cubes and the farmhouse
 
-		// Lighting stuff
-		modelShader.Use();
+		view = camera.GetViewMatrix(); // Set view to camera view
 
-		// Draw the loaded model
-		glm::mat4 model;
-		view = camera.GetViewMatrix();
+		shader.Use();
 
-		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // Translate it down a bit so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// It's a bit too big for our scene, so scale it down
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(modelShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		// Set light uniforms
+		glUniform3fv(glGetUniformLocation(shader.Program, "lightPos"), 1, &sceneLight[0]);
+		glUniform3fv(glGetUniformLocation(shader.Program, "viewPos"), 1, &camera.Position[0]);
+		glUniformMatrix4fv(glGetUniformLocation(shader.Program, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+		glUniform1i(glGetUniformLocation(shader.Program, "shadows"), shadows);
+		
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		RenderScene(shader, ourModel);
 
-		ourModel.Draw(modelShader);
-
-		// Swap the screen buffers
+		// Swap the buffers (Like in DX)
 		glfwSwapBuffers(window);
 	}
 
@@ -163,46 +245,143 @@ int main()
 	return 0;
 }
 
-
-
-
-
-
-// Loads a cubemap texture from 6 individual texture faces
-// Order should be:
-// +X (right)
-// -X (left)
-// +Y (top)
-// -Y (bottom)
-// +Z (front)
-// -Z (back)
-GLuint loadCubemap(vector<const GLchar*> faces)
+// Load a texture
+GLuint loadTexture(GLchar* path)
 {
+	// Generate texture ID and load texture data 
 	GLuint textureID;
 	glGenTextures(1, &textureID);
-
 	int width, height;
-	unsigned char* image;
+	unsigned char* image = SOIL_load_image(path, &width, &height, 0, SOIL_LOAD_RGB);
 
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-	for (GLuint i = 0; i < faces.size(); i++)
-	{
-		image = SOIL_load_image(faces[i], &width, &height, 0, SOIL_LOAD_RGB);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		SOIL_free_image_data(image);
-	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	// Assign texture to ID
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
+	// Params
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	SOIL_free_image_data(image);
 	return textureID;
+
+}
+
+void RenderScene(Shader &shader, Model &ourModel)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, grassTexture);
+
+	// Floor
+	glm::mat4 model;
+	glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	glBindVertexArray(planeVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
+
+	// Set texture to wood for our cubes
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, cubeTexture);
+
+	// Cubes
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.0));
+	glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	DrawCube();
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(2.0f, 0.0f, 1.0));
+	glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	DrawCube();
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 2.0));
+	model = glm::rotate(model, 60.0f, glm::normalize(glm::vec3(1.0, 0.0, 1.0)));
+	model = glm::scale(model, glm::vec3(0.5));
+	glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	DrawCube();
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(5.0f, -0.5f, 0.0f)); // Translate it down a bit so it's at the center of the scene
+	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// It's a bit too big for our scene, so scale it down
+	model = glm::rotate(model, (glm::mediump_float)135, glm::vec3(0.0f, 1.0f, 0.0f));
+	glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	ourModel.Draw(shader);
+}
+
+// Render a cube to show shadows
+GLuint cubeVAO = 0;
+GLuint cubeVBO = 0;
+void DrawCube()
+{
+	// Initialize (if necessary)
+	if (cubeVAO == 0)
+	{
+		GLfloat vertices[] = {
+			-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+			0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
+			0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,        
+			0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+			-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,															  
+			-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+			0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+			0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+			0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 
+			-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 
+			-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,															
+			-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 
+			-0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 
+			-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+			-0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 
+			-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 															 
+			0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+			0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 
+			0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,        
+			0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 
+			0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 
+			0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,   															
+			-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+			0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+			0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+			0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+			-0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+			-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 															
+			-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+			0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+			0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,    
+			0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+			-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+			-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f      
+		};
+		glGenVertexArrays(1, &cubeVAO);
+		glGenBuffers(1, &cubeVBO);
+		// Fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		// Link vertex attributes
+		glBindVertexArray(cubeVAO);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// Render Cube
+	glBindVertexArray(cubeVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
 }
 
 
-
+/* Input helper functions */
 
 
 // Input callback, if a user presses a key this callback is called
@@ -227,7 +406,7 @@ void input_process()
 {
 	// Camera controls
 	GLfloat cameraSpeed = 5.0f * deltaTime;
-	//std::cout << deltaTime << std::endl; // GET FPS
+	std::cout << deltaTime << std::endl; // Print FPS to console
 
 	if (keys[GLFW_KEY_W])
 		camera.ProcessKeyboard(FORWARD, deltaTime);

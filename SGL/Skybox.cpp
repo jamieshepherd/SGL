@@ -2,52 +2,46 @@
 --------------------------------------------------------------------
 Skybox.cpp
 --------------------------------------------------------------------
-A class that loads and generates the Skybox as a cubemap.
+A class that loads and generates the Skybox as a cubemapped cube.
 --------------------------------------------------------------------
 */
 
 #include "Skybox.h"
 
+// Make the Skybox cube
 Skybox::Skybox(char* a)
 {
-	// Make a box
 	GLfloat cubeVertices[] = {
-		// Positions          // Texture Coords
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
 		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
 		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
 		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
 		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
 		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
 		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
 		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 		0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
 		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
 		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
 		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
 		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
 		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
@@ -57,42 +51,36 @@ Skybox::Skybox(char* a)
 	};
 
 	GLfloat skyboxVertices[] = {
-		// Positions          
 		-1.0f,  1.0f, -1.0f,
 		-1.0f, -1.0f, -1.0f,
 		1.0f, -1.0f, -1.0f,
 		1.0f, -1.0f, -1.0f,
 		1.0f,  1.0f, -1.0f,
 		-1.0f,  1.0f, -1.0f,
-
 		-1.0f, -1.0f,  1.0f,
 		-1.0f, -1.0f, -1.0f,
 		-1.0f,  1.0f, -1.0f,
 		-1.0f,  1.0f, -1.0f,
 		-1.0f,  1.0f,  1.0f,
 		-1.0f, -1.0f,  1.0f,
-
 		1.0f, -1.0f, -1.0f,
 		1.0f, -1.0f,  1.0f,
 		1.0f,  1.0f,  1.0f,
 		1.0f,  1.0f,  1.0f,
 		1.0f,  1.0f, -1.0f,
 		1.0f, -1.0f, -1.0f,
-
 		-1.0f, -1.0f,  1.0f,
 		-1.0f,  1.0f,  1.0f,
 		1.0f,  1.0f,  1.0f,
 		1.0f,  1.0f,  1.0f,
 		1.0f, -1.0f,  1.0f,
 		-1.0f, -1.0f,  1.0f,
-
 		-1.0f,  1.0f, -1.0f,
 		1.0f,  1.0f, -1.0f,
 		1.0f,  1.0f,  1.0f,
 		1.0f,  1.0f,  1.0f,
 		-1.0f,  1.0f,  1.0f,
 		-1.0f,  1.0f, -1.0f,
-
 		-1.0f, -1.0f, -1.0f,
 		-1.0f, -1.0f,  1.0f,
 		1.0f, -1.0f, -1.0f,
@@ -120,15 +108,7 @@ Skybox::Skybox(char* a)
 	cubemapTexture = Load(faces);
 }
 
-
-// Loads a cubemap texture from 6 individual texture faces
-// Order should be:
-// +X (right)
-// -X (left)
-// +Y (top)
-// -Y (bottom)
-// +Z (front) 
-// -Z (back)
+// Loads cubemap texture
 GLuint Skybox::Load(std::vector<const GLchar*> faces)
 {
 	GLuint textureID;
@@ -154,9 +134,9 @@ GLuint Skybox::Load(std::vector<const GLchar*> faces)
 	return textureID;
 }
 
+// Draw the cube to the scene
 void Skybox::Draw()
 {
-	// Skybox cube
 	glBindVertexArray(skyboxVAO);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);

@@ -29,30 +29,12 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Skybox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Terrain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Shaders\VS_Lamp.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\VS_Lighting.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\FS_Lamp.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\FS_Lighting.glsl">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\FS_Model.glsl">
       <Filter>Shaders</Filter>
     </None>
@@ -63,6 +45,18 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\VS_Skybox.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_Depth.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\FS_Depth.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\FS_Shadow.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VS_Shadow.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
@@ -82,13 +76,7 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Skybox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Terrain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

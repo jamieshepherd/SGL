@@ -1,0 +1,15 @@
+﻿  Camera.cpp
+z:\projects\sgl\sgl\Common.h(13): fatal error C1083: Cannot open include file: 'GLFW/glfw3.h': No such file or directory
+  Main.cpp
+z:\projects\sgl\sgl\Common.h(13): fatal error C1083: Cannot open include file: 'GLFW/glfw3.h': No such file or directory
+  Mesh.cpp
+z:\projects\sgl\sgl\Common.h(13): fatal error C1083: Cannot open include file: 'GLFW/glfw3.h': No such file or directory
+  Model.cpp
+z:\projects\sgl\sgl\Common.h(13): fatal error C1083: Cannot open include file: 'GLFW/glfw3.h': No such file or directory
+  Shader.cpp
+  Skybox.cpp
+z:\projects\sgl\sgl\Common.h(13): fatal error C1083: Cannot open include file: 'GLFW/glfw3.h': No such file or directory
+  Terrain.cpp
+z:\projects\sgl\sgl\Common.h(13): fatal error C1083: Cannot open include file: 'GLFW/glfw3.h': No such file or directory
+  Texture.cpp
+z:\projects\sgl\sgl\Common.h(13): fatal error C1083: Cannot open include file: 'GLFW/glfw3.h': No such file or directory

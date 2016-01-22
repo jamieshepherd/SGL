@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="freeimage_universal_redist_init;freeimage_universal_redist_init_2">
+  <PropertyGroup Label="Default initializers for properties">
+    <Linkage-freeimage_universal_redist Condition="'$(Linkage-freeimage_universal_redist)' == ''">dynamic</Linkage-freeimage_universal_redist>
+    <CallingConvention-freeimage_universal_redist Condition="'$(CallingConvention-freeimage_universal_redist)' == ''">cdecl</CallingConvention-freeimage_universal_redist>
+  </PropertyGroup>
+  <Target Name="freeimage_universal_redist_init">
+    <freeimage_universal_redist_Contains Text="Linkage-dynamic" Library="freeimage_universal_redist" Value="dynamic" Condition="'$(Linkage-freeimage_universal_redist)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkage-freeimage_universal_redist" />
+    </freeimage_universal_redist_Contains>
+    <freeimage_universal_redist_Contains Text="Linkage-static" Library="freeimage_universal_redist" Value="static" Condition="'$(Linkage-freeimage_universal_redist)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkage-freeimage_universal_redist" />
+    </freeimage_universal_redist_Contains>
+    <freeimage_universal_redist_Contains Text="Linkage-ltcg" Library="freeimage_universal_redist" Value="ltcg" Condition="'$(Linkage-freeimage_universal_redist)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkage-freeimage_universal_redist" />
+    </freeimage_universal_redist_Contains>
+    <freeimage_universal_redist_Contains Text="Linkage-sxs" Library="freeimage_universal_redist" Value="sxs" Condition="'$(Linkage-freeimage_universal_redist)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkage-freeimage_universal_redist" />
+    </freeimage_universal_redist_Contains>
+    <freeimage_universal_redist_Contains Text="CallingConvention-cdecl" Library="freeimage_universal_redist" Value="cdecl" Condition="'$(CallingConvention-freeimage_universal_redist)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConvention-freeimage_universal_redist" />
+    </freeimage_universal_redist_Contains>
+    <freeimage_universal_redist_Contains Text="CallingConvention-stdcall" Library="freeimage_universal_redist" Value="stdcall" Condition="'$(CallingConvention-freeimage_universal_redist)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConvention-freeimage_universal_redist" />
+    </freeimage_universal_redist_Contains>
+    <freeimage_universal_redist_Contains Text="CallingConvention-fastcall" Library="freeimage_universal_redist" Value="fastcall" Condition="'$(CallingConvention-freeimage_universal_redist)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConvention-freeimage_universal_redist" />
+    </freeimage_universal_redist_Contains>
+    <freeimage_universal_redist_Contains Text="CallingConvention-thiscall" Library="freeimage_universal_redist" Value="thiscall" Condition="'$(CallingConvention-freeimage_universal_redist)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConvention-freeimage_universal_redist" />
+    </freeimage_universal_redist_Contains>
+    <freeimage_universal_redist_Contains Text="CallingConvention-clrcall" Library="freeimage_universal_redist" Value="clrcall" Condition="'$(CallingConvention-freeimage_universal_redist)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConvention-freeimage_universal_redist" />
+    </freeimage_universal_redist_Contains>
+  </Target>
+  <Target Name="freeimage_universal_redist_init_2">
+    <SetEnv Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')" Name="PATH" Prefix="true" Value="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Debug\WinRT">
+      <Output TaskParameter="OutputEnvironmentVariable" PropertyName="PATH" />
+    </SetEnv>
+    <SetEnv Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')" Name="PATH" Prefix="true" Value="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Release\WinRT">
+      <Output TaskParameter="OutputEnvironmentVariable" PropertyName="PATH" />
+    </SetEnv>
+    <SetEnv Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')" Name="PATH" Prefix="true" Value="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Debug\WinRT">
+      <Output TaskParameter="OutputEnvironmentVariable" PropertyName="PATH" />
+    </SetEnv>
+    <SetEnv Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')" Name="PATH" Prefix="true" Value="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Release\WinRT">
+      <Output TaskParameter="OutputEnvironmentVariable" PropertyName="PATH" />
+    </SetEnv>
+    <SetEnv Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')" Name="PATH" Prefix="true" Value="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Debug\Phone8">
+      <Output TaskParameter="OutputEnvironmentVariable" PropertyName="PATH" />
+    </SetEnv>
+    <SetEnv Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')" Name="PATH" Prefix="true" Value="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Release\Phone8">
+      <Output TaskParameter="OutputEnvironmentVariable" PropertyName="PATH" />
+    </SetEnv>
+    <SetEnv Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')" Name="PATH" Prefix="true" Value="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Debug\Phone8">
+      <Output TaskParameter="OutputEnvironmentVariable" PropertyName="PATH" />
+    </SetEnv>
+    <SetEnv Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')" Name="PATH" Prefix="true" Value="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Release\Phone8">
+      <Output TaskParameter="OutputEnvironmentVariable" PropertyName="PATH" />
+    </SetEnv>
+  </Target>
+  <ItemGroup Label="Win32 and v120 and Debug and WinRT" Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')">
+    <None Include="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Debug\WinRT\FreeImage.dll" Condition="(('$(AppContainerApplication.ToLower())' == 'true')) OR (('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0'))">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup Label="Win32 and v120 and Release and WinRT" Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')">
+    <None Include="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Release\WinRT\FreeImage.dll" Condition="(('$(AppContainerApplication.ToLower())' == 'true')) OR (('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0'))">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup Label="ARM and v120 and Debug and WinRT" Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')">
+    <None Include="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Debug\WinRT\FreeImage.dll" Condition="(('$(AppContainerApplication.ToLower())' == 'true')) OR (('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0'))">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup Label="ARM and v120 and Release and WinRT" Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')">
+    <None Include="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Release\WinRT\FreeImage.dll" Condition="(('$(AppContainerApplication.ToLower())' == 'true')) OR (('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0'))">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup Label="Win32 and v120 and Debug and Phone8" Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')">
+    <None Include="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Debug\Phone8\FreeImage.dll" Condition="(('$(AppContainerApplication.ToLower())' == 'true')) OR (('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0'))">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup Label="Win32 and v120 and Release and Phone8" Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')">
+    <None Include="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Release\Phone8\FreeImage.dll" Condition="(('$(AppContainerApplication.ToLower())' == 'true')) OR (('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0'))">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup Label="ARM and v120 and Debug and Phone8" Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')">
+    <None Include="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Debug\Phone8\FreeImage.dll" Condition="(('$(AppContainerApplication.ToLower())' == 'true')) OR (('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0'))">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup Label="ARM and v120 and Release and Phone8" Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')">
+    <None Include="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Release\Phone8\FreeImage.dll" Condition="(('$(AppContainerApplication.ToLower())' == 'true')) OR (('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0'))">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\default-propertiesui.xml" />
+  </ItemGroup>
+  <Target Name="freeimage_universal_redist_AfterBuild" AfterTargets="AfterBuild" />
+  <Target Name="freeimage_universal_redist_AfterBuild_Win32_and_v120_and_Debug_and_WinRT" Label="Win32 and v120 and Debug and WinRT" Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')" AfterTargets="freeimage_universal_redist_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Debug\WinRT\FreeImage.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="freeimage_universal_redist_AfterBuild_Win32_and_v120_and_Release_and_WinRT" Label="Win32 and v120 and Release and WinRT" Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')" AfterTargets="freeimage_universal_redist_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Release\WinRT\FreeImage.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="freeimage_universal_redist_AfterBuild_ARM_and_v120_and_Debug_and_WinRT" Label="ARM and v120 and Debug and WinRT" Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')" AfterTargets="freeimage_universal_redist_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Debug\WinRT\FreeImage.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="freeimage_universal_redist_AfterBuild_ARM_and_v120_and_Release_and_WinRT" Label="ARM and v120 and Release and WinRT" Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(AppContainerApplication.ToLower())' == 'true')" AfterTargets="freeimage_universal_redist_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Release\WinRT\FreeImage.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="freeimage_universal_redist_AfterBuild_Win32_and_v120_and_Debug_and_Phone8" Label="Win32 and v120 and Debug and Phone8" Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')" AfterTargets="freeimage_universal_redist_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Debug\Phone8\FreeImage.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="freeimage_universal_redist_AfterBuild_Win32_and_v120_and_Release_and_Phone8" Label="Win32 and v120 and Release and Phone8" Condition="'$(Platform.ToLower())' == 'win32' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')" AfterTargets="freeimage_universal_redist_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)../..//build/native/bin/Win32\v120\Release\Phone8\FreeImage.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="freeimage_universal_redist_AfterBuild_ARM_and_v120_and_Debug_and_Phone8" Label="ARM and v120 and Debug and Phone8" Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')" AfterTargets="freeimage_universal_redist_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Debug\Phone8\FreeImage.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="freeimage_universal_redist_AfterBuild_ARM_and_v120_and_Release_and_Phone8" Label="ARM and v120 and Release and Phone8" Condition="'$(Platform.ToLower())' == 'arm' And ( $(PlatformToolset.ToLower().IndexOf('v120')) &gt; -1 Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And ('$(TargetPlatformIdentifier.ToLower())' == 'windows phone' And '$(TargetPlatformVersion)' == '8.0')" AfterTargets="freeimage_universal_redist_AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)../..//build/native/bin/ARM\v120\Release\Phone8\FreeImage.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <UsingTask TaskName="freeimage_universal_redist_Contains" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" TaskFactory="CodeTaskFactory">
+    <ParameterGroup>
+      <Text Output="false" ParameterType="System.String" />
+      <Library Output="false" Required="true" ParameterType="System.String" />
+      <Value Output="false" Required="true" ParameterType="System.String" />
+      <Result Output="true" ParameterType="System.String" />
+    </ParameterGroup>
+    <Task>
+      <Code>Result = ((Text ?? "").Split(';').Contains(Library) ) ? Value : String.Empty;</Code>
+    </Task>
+  </UsingTask>
+</Project>
